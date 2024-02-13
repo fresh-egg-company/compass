@@ -1,0 +1,91 @@
+body {
+  background-color: #222;
+  margin: 0;
+  width: 100dvw;
+  height: 100dvh;
+  user-select: none;
+  touch-action: none;
+  text-align: center;
+}
+
+main {
+  overflow: hidden;
+  width: 100dvw;
+  height: calc(100dvh - 120px);
+  top: 0;
+}
+
+.dial-parent {
+  position: absolute;
+}
+
+.dial {
+  position: absolute;
+  border-style: solid;
+  border-radius: 50%;
+  border-color: #444;
+  border-width: 1px;
+}
+
+.arrow {
+  position: absolute;
+  background: linear-gradient(#F00, #FFF);
+  clip-path: polygon(50% 0, 70% 50%, 50% 100%, 30% 50%);
+}
+
+.line {
+  position: absolute;
+  background: lightgray;
+  clip-path: polygon(calc(50% - 1px) 0, calc(50% - 1px) 30%, calc(50% + 1px) 30%, calc(50% + 1px) 0);
+}
+
+.dial-direction {
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.dial-direction-letter {
+  position: absolute;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  background-color: transparent;
+}
+
+.small-letter {
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.degree-letter {
+  position: absolute;
+  font-size: 12px;
+  font-weight: normal;
+  color: white;
+  background-color: transparent;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  height: 120px;
+  width: 100%;
+}
+
+.display-value {
+  font-size: 32px;
+  width: 100%;
+  height: 48px;
+  color: white;
+}
+
+.operation-frame {
+  text-align: center;
+  height: 48px;
+}
+
+.lock-orientation-label {
+  font-size: 18px;
+  color: white;
+}
