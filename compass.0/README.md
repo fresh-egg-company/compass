@@ -289,3 +289,5 @@ src/App.cssの一部
 この時点のプロジェクトファイルを[ここ](https://github.com/fresh-egg-company/compass/tree/main/compass.1)に置いておく。
 
 プロジェクトファイルには`node_modules`は入れていないので、cloneして動かす際は、`npm i`で必要なモジュールをダウンロードすること。
+
+[次へ](https://github.com/fresh-egg-company/compass/blob/main/compass.2/README.md)
