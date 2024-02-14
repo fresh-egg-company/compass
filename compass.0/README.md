@@ -73,6 +73,8 @@ webpack compiled successfully
 無事アプリとして起動し、基盤が整ったことを確認した。
 この時点のプロジェクトファイルを[ここ](https://github.com/fresh-egg-company/compass/tree/main/compass.0)に置いておく。
 
+プロジェクトファイルには`node_modules`は入れていないので、cloneして動かす際は、`npm i`で必要なモジュールをダウンロードすること。
+
 ### 1-2.方位の取得と表示
 
 この後、'Edit src/App.js and save to reload.'の部分を、'0.00°北'というように、スマホが現在向いている方位を表示するよう処理を書き換える。
@@ -285,3 +287,5 @@ src/App.cssの一部
 <img src="https://github.com/fresh-egg-company/compass/blob/main/doc/images/compass_1_screen.jpg" width="50%" alt="compass_1_screen" >
 
 この時点のプロジェクトファイルを[ここ](https://github.com/fresh-egg-company/compass/tree/main/compass.1)に置いておく。
+
+プロジェクトファイルには`node_modules`は入れていないので、cloneして動かす際は、`npm i`で必要なモジュールをダウンロードすること。
