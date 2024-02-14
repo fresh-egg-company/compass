@@ -1,3 +1,5 @@
+[目次へ](https://github.com/fresh-egg-company/compass/blob/main/README.md)
+
 ## 2.指針と方位ダイヤルを表示
 
 方位と度数は表示されるようになったが、コンパスと呼ぶには程遠い画面であるので、コンパスアプリとして必要な表示を行うようにする。
