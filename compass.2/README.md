@@ -1,70 +1,287 @@
-# Getting Started with Create React App
+## 2.指針と方位ダイヤルを表示
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+方位と度数は表示されるようになったが、コンパスと呼ぶには程遠い画面であるので、コンパスアプリとして必要な表示を行うようにする。
 
-## Available Scripts
+では、どのような表示をすればコンパスらしいか？iPhoneのコンパスを見てみよう。
 
-In the project directory, you can run:
+iPhoneのコンパスの画面には、
+- 指針
+- 方位と度数を表すダイヤル
 
-### `npm start`
+があることがわかる。
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+iPhoneのコンパスと本物のコンパスとの違いは、
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. 本物は、方位と度数を表すダイヤルは回転せず、指針だけが常に北を向いている
+2. iPhoneのコンパスは方位と度数を表すダイヤルが、常に北を向くよう回転する
 
-### `npm test`
+という違いがある。スマホ用アプリとしては、2の方が自然に見えるため、2の方法を採用することとする。
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 2-1. 指針
+指針は、習慣的に北を指す方を赤、南を指す方を黒や白とするようである。また、針であるので、先が尖っていた方が、それっぽい。
+図を書く方法としてはsvgを利用するのが一般的であるが、描きたいのは単純な図形であるため、正方形をclip-pathでクリッピングする方法をとる。
 
-### `npm run build`
+https://developer.mozilla.org/ja/docs/Web/CSS/clip-path
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 2-2. 方位と度数を表すダイヤル
+このパネルには、北、北東、東、南東、南、南西、西、北西の8つの方位を表示することとする。スマホの向く方位によって回転させるため、正方形の端に方位を表示させる方法をとる。
+1. まず北を表示する。
+2. 次に、同じ位置で、45度回転させて北東を表示する。
+3. さらに、同じ位置で、90度回転させて東を表示する。
+4. さらに、同じ位置で、135度回転させて南東を表示する。
+   ...
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+この要領で、北西まで繰り返す。
+度数についても、方位と同じ手法で、30度単位で度数を表示させる。
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+方位の変化を検出した時、方位と度数を表すダイヤルごと回転させることで、コンパスとして機能させる。そのため、htmlのセクション分けを修正する。
 
-### `npm run eject`
+今まで、\<header\>セクションで表示していた方位、度数は、レイアウトとしてはフッターになるため、\<footer\>セクションに、そして、これから表示する指針やダイヤルは\<main\>セクションに置くこととする。
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 2-3. その他
+その他、コンパスアプリとして使い勝手を上げるために、いくつか配慮すべき点がある。
+- 画面をピンチ操作で拡大や縮小させると、コンパスが見えなくなる。
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  これを避けるために、cssでtouch-actionを指定する。
+```css
+  touch-action: none;
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- 画面で文字の部分をタップすると、文字が選択状態になってしまい、見づらくなる。
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+  これを避けるために、cssでuser-selectを指定する。
+```css
+  user-select: none;
+```
 
-## Learn More
+これらを反映したApp.js、App.cssは以下の通りとなる。
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+src/App.js
+```javascript
+import { useState, useCallback, useEffect } from 'react';
+import './App.css';
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+function App() {
+  const dialOuterSize = 260;                      // ダイヤルの外側の円の大きさ
+  const dialSize = 180;                           // ダイヤルの内側の円の大きさ
+  const dialDegreeSize = 210;                     // ダイヤルの度数の円の大きさ
+  const arrowSize = 180;                          // 指針の大きさ
+  const dialDirectionSize = dialOuterSize;        // 方位を表示する正方形の大きさ
 
-### Code Splitting
+  const [alpha, setAlpha] = useState(0.0);        // 取得する度数
+  const [direction, setDirection] = useState(''); // 表示する方位
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+  // 表示する方位のセット
+  const directionLetters = ['北', '北東', '東', '南東', '南', '南西', '西', '北西' ];
 
-### Analyzing the Bundle Size
+  // 現在の方位を表示
+  useEffect(() => {
+    if (alpha >= 360.0 - 22.5 || alpha < 22.5) {
+      setDirection(directionLetters[0]);
+    } else if (alpha >= 22.5 && alpha < 67.5) {
+      setDirection(directionLetters[1]);
+    } else if (alpha >= 67.5 && alpha < 112.5) {
+      setDirection(directionLetters[2]);
+    } else if (alpha >= 112.5 && alpha < 157.5) {
+      setDirection(directionLetters[3]);
+    } else if (alpha >= 157.5 && alpha < 202.5) {
+      setDirection(directionLetters[4]);
+    } else if (alpha >= 202.5 && alpha < 247.5) {
+      setDirection(directionLetters[5]);
+    } else if (alpha >= 247.5 && alpha < 292.5) {
+      setDirection(directionLetters[6]);
+    } else if (alpha >= 292.5 && alpha < 337.5) {
+      setDirection(directionLetters[7]);
+    }
+  }, [alpha]);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+  // 方位表示
+  const renderDirectionLetters = () => {
+    const rendered = [];
+    let degree = 0;
+    for(let each of directionLetters) {
+      let sizeClass = '';
+      if (each.length > 1) {
+        sizeClass = ' small-letter';
+      }
+      rendered.push(<div key={degree} className={'dial-direction dial-direction-letter' + sizeClass}
+                        style={{top: 0,
+                                left: 0,
+                                width: dialDirectionSize + 'px',
+                                height: dialDirectionSize + 'px',
+                                transform: `rotate(${degree}deg)`}}>
+                      {each}
+                    </div>);
+      degree += 45;
+    }
+    return rendered;
+  }
 
-### Making a Progressive Web App
+  // 度数表示
+  const renderDegrees = () => {
+    const rendered = [];
+    for(let degree = 0; degree < 360; degree += 30) {
+      rendered.push(<div key={degree} className='dial-direction degree-letter'
+                        style={{top: ((dialOuterSize - dialDegreeSize) / 2) + 'px',
+                              left: ((dialOuterSize - dialDegreeSize) / 2) + 'px',
+                              width: dialDegreeSize + 'px',
+                              height: dialDegreeSize + 'px',
+                              transform: `rotate(${degree}deg)`}}>
+                      {degree}
+                    </div>);
+    }
+    return rendered;
+  }
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+  // deviceorientationabsoluteのイベント処理
+  const handleDeviceOrientationEvent = useCallback(event => {
+    setAlpha(Math.round((360.0 - event.alpha) * 10) / 10);
+  }, []);
 
-### Advanced Configuration
+  // 初期化処理
+  useEffect(() => {
+    window.addEventListener('deviceorientationabsolute', handleDeviceOrientationEvent);
+  }, []);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+  // 主処理
+  return (
+    <div className="App">
+      <main className='dial-parent' style={{top: `calc((100dvh - ${dialOuterSize}px) / 2)`,
+                                            left: `calc((100dvw - ${dialOuterSize}px) / 2)`,
+                                            width: (dialOuterSize + 2) + 'px',
+                                            height: (dialOuterSize + 2) + 'px',
+                                            transform: `rotate(${360.0 - alpha}deg)`
+                                            }}>
+        <div className='dial dial-outer'
+            style={{top: 0,
+                    left: 0,
+                    width: dialOuterSize + 'px',
+                    height: dialOuterSize + 'px'}}>
+        </div>
+        <div className='dial dial-inner'
+            style={{top: ((dialOuterSize - dialSize) / 2) + 'px',
+                    left: ((dialOuterSize - dialSize) / 2) + 'px',
+                    width: dialSize + 'px',
+                    height: dialSize + 'px'}}>
+        </div>
+        <div className='arrow'
+            style={{top: ((dialOuterSize - arrowSize) / 2) + 'px',
+                    left: ((dialOuterSize - arrowSize) / 2) + 'px',
+                    width: arrowSize + 'px',
+                    height: arrowSize + 'px'}}>
+        </div>
+        <div className='line'
+            style={{top: 0,
+                    left: 0,
+                    width: dialOuterSize + 'px',
+                    height: dialOuterSize + 'px',
+                    transform: `rotate(${alpha}deg)`}}>
+        </div>
+        {
+          renderDirectionLetters()
+        }
+        {
+          renderDegrees()
+        }
+      </main>
+      <footer>
+        <div className='display-value'>
+          {alpha}°{direction}
+        </div>
+      </footer>
+    </div>
+  );
+}
 
-### Deployment
+export default App;
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+src/App.css
+```css
+body {
+  background-color: #222;
+  margin: 0;
+  width: 100dvw;
+  height: 100dvh;
+  user-select: none;
+  touch-action: none;
+  text-align: center;
+}
 
-### `npm run build` fails to minify
+main {
+  overflow: hidden;
+  width: 100dvw;
+  height: calc(100dvh - 120px);
+  top: 0;
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+.dial-parent {
+  position: absolute;
+}
+
+.dial {
+  position: absolute;
+  border-style: solid;
+  border-radius: 50%;
+  border-color: #444;
+  border-width: 1px;
+}
+
+.arrow {
+  position: absolute;
+  background: linear-gradient(#F00, #FFF);
+  clip-path: polygon(50% 0, 70% 50%, 50% 100%, 30% 50%);
+}
+
+.line {
+  position: absolute;
+  background: lightgray;
+  clip-path: polygon(calc(50% - 1px) 0, calc(50% - 1px) 30%, calc(50% + 1px) 30%, calc(50% + 1px) 0);
+}
+
+.dial-direction {
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.dial-direction-letter {
+  position: absolute;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  background-color: transparent;
+}
+
+.small-letter {
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.degree-letter {
+  position: absolute;
+  font-size: 12px;
+  font-weight: normal;
+  color: white;
+  background-color: transparent;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  height: 120px;
+  width: 100%;
+}
+
+.display-value {
+  font-size: 32px;
+  width: 100%;
+  color: white;
+}
+```
+
+これを実行してみる。最初のうちは、表示される方位が狂っているように見えるが、以下の動画に従って補正を行なっていくと、だんだん正しい方位を表すようになる。
+
+https://youtu.be/J_cZnPcW-Yw?feature=shared
+
+この時点のプロジェクトファイルを[ここ](https://github.com/fresh-egg-company/compass/tree/main/compass.2)に置いておく。
