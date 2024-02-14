@@ -1,4 +1,4 @@
-[目次へ](https://github.com/fresh-egg-company/compass/README.md)
+[目次へ](https://github.com/fresh-egg-company/compass/blob/main/README.md)
 
 ## 1.方位を数値で表示
 
