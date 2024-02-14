@@ -291,3 +291,6 @@ footer {
 https://youtu.be/J_cZnPcW-Yw?feature=shared
 
 この時点のプロジェクトファイルを[ここ](https://github.com/fresh-egg-company/compass/tree/main/compass.2)に置いておく。
+
+プロジェクトファイルには`node_modules`は入れていないので、cloneして動かす際は、`npm i`で必要なモジュールをダウンロードすること。
+
