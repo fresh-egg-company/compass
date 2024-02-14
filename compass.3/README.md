@@ -1,3 +1,5 @@
+[目次へ](https://github.com/fresh-egg-company/compass/blob/main/README.md)
+
 # 3.スマホの回転に対応
 
 コンパスアプリとしての機能は全て実装されたが、スマホの設定で画面が自動回転になっていると、少々不都合が発生する。
