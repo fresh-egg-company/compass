@@ -241,3 +241,6 @@ fecMBA:build fec$
 これで、ビルドと本番への配布は完了した。配布先URLにスマホからアクセスし、アプリが正しく動作すること、そして、ホーム画面に追加して、設定したアプリ名とアイコン画像でアプリがホーム画面に追加されたことを確認する。
 
 <img src="https://github.com/fresh-egg-company/compass/blob/main/doc/images/icon_on_home.jpg" width="50%" alt="icon_on_home">
+
+
+完成形のプロジェクトファイルを[ここ](https://https://github.com/fresh-egg-company/compass/edit/main/compass.3)に置いておく。
