@@ -66,7 +66,7 @@ webpack compiled successfully
 ```
 開発PCのブラウザで以下のように表示される。
 
-![compass_0_screen](https://github.com/fresh-egg-company/compass/blob/main/doc/images/compass_0_screen.jpg)
+<img src="https://github.com/fresh-egg-company/compass/blob/main/doc/images/compass_0_screen.jpg" width="50%" alt="compass_0_screen" >
 
 無事アプリとして起動し、基盤が整ったことを確認した。
 この時点のプロジェクトファイルを[ここ](https://github.com/fresh-egg-company/compass/tree/main/compass.0)に置いておく。
@@ -197,11 +197,11 @@ HTTPS=true
 
 4. スマホの画面に、’この接続ではプライバシーが保護されません’と表示された警告画面が表示される。そのページ下部にある'詳細設定’をタップする。
 
-![warning_1_screen](https://github.com/fresh-egg-company/compass/blob/main/doc/images/warning_1_screen.jpg)
+<img src="https://github.com/fresh-egg-company/compass/blob/main/doc/images/warning_1_screen.jpg" width="50%" alt="warning_1_screen" >
 
 5. スマホの画面が切り替わり、’このサーバーがXXX.XXX.XXX.XXXであることを確認できませんでした。'と警告が表示される。そのページの中ほどにある、’XXX.XXX.XXX.XXX’にアクセスする（安全ではありません）’をクリックする。
 
-![warning_2_screen](https://github.com/fresh-egg-company/compass/blob/main/doc/images/warning_2_screen.jpg)
+<img src="https://github.com/fresh-egg-company/compass/blob/main/doc/images/warning_2_screen.jpg" width="50%" alt="warning_2_screen" >
 
 6. スマホの画面にアプリが表示され、頻繁に方位が書き変わるのが確認できる。
 
@@ -280,8 +280,6 @@ src/App.cssの一部
 
 これらの不具合を修正した後のアプリの画面は以下の通りとなる。
 
-![compass_1_screen](https://github.com/fresh-egg-company/compass/blob/main/doc/images/compass_1_screen.jpg)
+<img src="https://github.com/fresh-egg-company/compass/blob/main/doc/images/compass_1_screen.jpg" width="50%" alt="compass_1_screen" >
 
 この時点のプロジェクトファイルを[ここ](https://github.com/fresh-egg-company/compass/tree/main/compass.1)に置いておく。
-
-
