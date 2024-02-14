@@ -280,7 +280,11 @@ footer {
 }
 ```
 
-これを実行してみる。最初のうちは、表示される方位が狂っているように見えるが、以下の動画に従って補正を行なっていくと、だんだん正しい方位を表すようになる。
+これを実行すると、以下のように表示される。
+
+<img src="https://github.com/fresh-egg-company/compass/blob/main/doc/images/compass_2_screen.jpg" width="50%" alt="compass_2_screen" >
+
+最初のうちは、表示される方位が狂っているように見えるが、以下の動画に従って補正を行なっていくと、だんだん正しい方位を表すようになる。
 
 https://youtu.be/J_cZnPcW-Yw?feature=shared
 
