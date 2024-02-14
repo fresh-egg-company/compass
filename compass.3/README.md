@@ -246,3 +246,6 @@ fecMBA:build fec$
 
 
 完成形のプロジェクトファイルを[ここ](https://https://github.com/fresh-egg-company/compass/edit/main/compass.3)に置いておく。
+
+プロジェクトファイルには`node_modules`は入れていないので、cloneして動かす際は、`npm i`で必要なモジュールをダウンロードすること。
+
